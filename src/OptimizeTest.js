@@ -8,12 +8,18 @@ const CounterA = React.memo(({ count }) => {
   return <div>{count}</div>;
 });
 
-const CounterB = React.memo(({ obj }) => {
+const CounterB = ({ obj }) => {
   useEffect(() => {
     console.log(`CounterB update = count: ${obj.count}`);
   });
   return <div>{obj.count}</div>;
-});
+};
+
+const areEqual = (prevProps, nextProps) => {
+  return prevProps.obj.count === nextProps.obj.count;
+};
+
+const MemoizedCounterB = React.memo(CounterB, areEqual);
 
 const OptimizeTest = () => {
   const [count, setCount] = useState(1);
@@ -29,7 +35,7 @@ const OptimizeTest = () => {
       </div>
       <div>
         <h2>Counter B</h2>
-        <CounterB obj={obj} />
+        <MemoizedCounterB obj={obj} />
         <button onClick={() => setObj({ count: obj.count })}>B button</button>
       </div>
     </div>
