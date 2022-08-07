@@ -1,6 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const DiaryEditor = ({ onCreate }) => {
+  useEffect(() => {
+    console.log("Diary Editor 렌더");
+  });
+
   const authorInput = useRef(); // focus를 위한 useRef() 함수 호출
   const contentInput = useRef();
 
@@ -12,8 +16,8 @@ const DiaryEditor = ({ onCreate }) => {
 
   const handleChangeState = (e) => {
     setState({
-      ...state,
-      [e.target.name]: e.target.value,
+      ...state, // spread 연산자
+      [e.target.name]: e.target.value, // event가 일어나는 target에 value가 변함
     });
   };
 
@@ -31,6 +35,7 @@ const DiaryEditor = ({ onCreate }) => {
     onCreate(state.author, state.content, state.emotion);
     alert("저장 성공!");
     setState({
+      // 일기 작성 후 일기화면 초기화
       author: "",
       content: "",
       emotion: 1,
@@ -77,4 +82,4 @@ const DiaryEditor = ({ onCreate }) => {
   );
 };
 
-export default DiaryEditor;
+export default React.memo(DiaryEditor);

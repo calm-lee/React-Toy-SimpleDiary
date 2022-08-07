@@ -1,8 +1,7 @@
 import "./App.css";
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
-import { useMemo, useEffect, useRef, useState } from "react";
-import OptimizeTest from "./OptimizeTest";
+import { useMemo, useEffect, useRef, useState, useCallback } from "react";
 
 //https://jsonplaceholder.typicode.com/comments
 
@@ -33,7 +32,7 @@ const App = () => {
     getData();
   }, []);
 
-  const onCreate = (author, content, emotion) => {
+  const onCreate = useCallback((author, content, emotion) => {
     const created_date = new Date().getTime();
     const newItem = {
       author,
@@ -43,8 +42,8 @@ const App = () => {
       id: dataId.current,
     };
     dataId.current += 1;
-    setData([newItem, ...data]); // new 일기가 기존 일기 위에 오도록
-  };
+    setData((data) => [newItem, ...data]); // new 일기가 기존 일기 위에 오도록
+  }, []);
 
   const onRemove = (targetId) => {
     console.log(`${targetId}가 삭제되었습니다.`);
@@ -73,7 +72,6 @@ const App = () => {
 
   return (
     <div className="App">
-      <OptimizeTest />
       <DiaryEditor onCreate={onCreate} />
       <div>전체 일기: {data.length}</div>
       <div>기분 좋은 일기 개수 : {goodCount}</div>
