@@ -45,19 +45,17 @@ const App = () => {
     setData((data) => [newItem, ...data]); // new 일기가 기존 일기 위에 오도록
   }, []);
 
-  const onRemove = (targetId) => {
-    console.log(`${targetId}가 삭제되었습니다.`);
-    const newDiaryList = data.filter((it) => it.id !== targetId); // targetId를 포함하지 않은 새 DiaryList를 만듦
-    setData(newDiaryList);
-  };
+  const onRemove = useCallback((targetId) => {
+    setData((data) => data.filter((it) => it.id !== targetId));
+  }, []);
 
-  const onEdit = (targetId, newContent) => {
-    setData(
+  const onEdit = useCallback((targetId, newContent) => {
+    setData((data) =>
       data.map((it) =>
         it.id === targetId ? { ...it, content: newContent } : it
       )
     );
-  };
+  }, []);
 
   const getDiaryAnalysis = useMemo(() => {
     console.log("일기 분석 시작");
