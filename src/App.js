@@ -1,7 +1,13 @@
 import "./App.css";
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
-import { useMemo, useEffect, useRef, useCallback, useReducer } from "react";
+import React, {
+  useMemo,
+  useEffect,
+  useRef,
+  useCallback,
+  useReducer,
+} from "react";
 
 //https://jsonplaceholder.typicode.com/comments
 
@@ -31,9 +37,9 @@ const reducer = (state, action) => {
   }
 };
 
-const App = () => {
-  // const [data, setData] = useState([]); // 일기 데이터를 저장할 거기 때문에 배열로 초기값 설정
+export const DiaryStateContext = React.createContext();
 
+const App = () => {
   const [data, dispatch] = useReducer(reducer, []);
 
   const dataId = useRef(0);
@@ -88,14 +94,16 @@ const App = () => {
   const { goodCount, badCount, goodRatio } = getDiaryAnalysis; // getDiaryAnalysis는 useMemo()를 사용하면 값 반환을 받기 때문에 값으로 써야 함
 
   return (
-    <div className="App">
-      <DiaryEditor onCreate={onCreate} />
-      <div>전체 일기: {data.length}</div>
-      <div>기분 좋은 일기 개수 : {goodCount}</div>
-      <div>기분 나쁜 일기 개수 : {badCount}</div>
-      <div>기분 좋은 일기 비율 : {goodRatio}</div>
-      <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
-    </div>
+    <DiaryStateContext.Provider value={data}>
+      <div className="App">
+        <DiaryEditor onCreate={onCreate} />
+        <div>전체 일기: {data.length}</div>
+        <div>기분 좋은 일기 개수 : {goodCount}</div>
+        <div>기분 나쁜 일기 개수 : {badCount}</div>
+        <div>기분 좋은 일기 비율 : {goodRatio}</div>
+        <DiaryList onEdit={onEdit} onRemove={onRemove} />
+      </div>
+    </DiaryStateContext.Provider>
   );
 };
 
